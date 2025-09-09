@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>AFFOR Project – National Afforestation Model</title>
+        <link rel="stylesheet" href="style.css" />
+      </head>
+      
+<body>
+
+  <header>
+    <h1>AFFOR – National Afforestation Model</h1>
+    <p>Evaluating the economic, carbon, and biodiversity outcomes of afforestation in Ireland</p>
+  </header>
+  <div class="logo-row">
+    <img src="images/logo.png" alt="AFFOR Logo" />
+    <img src="images/Picture1.png" alt="Partner 1" />
+    <img src="images/Picture2.png" alt="Partner 2" />
+  </div>
+  
+  <nav>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#objectives">Objectives</a></li>
+      <li><a href="#partners">Partners</a></li>
+      <li><a href="#outputs">Outputs</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <section id="overview">
+        <h2>Project Overview</h2>
+      
+        <p>
+          The AFFOR Project – National Afforestation Model – develops an integrated analytical framework to evaluate the economic, environmental, and social impacts of converting Irish agricultural land to forestry. Funded by the Environmental Protection Agency (EPA) under its 2021–2030 Research Programme, the project supports national and EU-level climate and biodiversity goals, including Ireland's Climate Action Plan and the EU Green Deal.
+        </p>
+      
+        <p>
+          By combining farm-level bioeconomic models with carbon and biodiversity metrics, the project assesses the trade-offs and synergies of afforestation across soil types, farm systems, and tree species. The model simulates outcomes under multiple scenarios, accounting for carbon sequestration, biodiversity shifts, and economic returns for both private landowners and society.
+        </p>
+      
+        <p>
+          The AFFOR model links detailed farm data (from the Teagasc National Farm Survey) with forest growth models, Delphi-elicited biodiversity values, and a novel value-chain Input-Output module. These tools allow policymakers to explore how afforestation incentives, species selection, and land characteristics influence net carbon, biodiversity, income, and rural employment across Ireland.
+        </p>
+      </section>
+      <section id="objectives">
+        <h2>Objectives</h2>
+        <p>
+          The main objective of AFFOR is to create a single, scalable modelling framework that integrates farm-level decisions, forest carbon dynamics, biodiversity change, and national policy outcomes. It addresses:
+        </p>
+        <ul>
+          <li>Modelling economic trade-offs between forestry and agriculture at farm and national scale</li>
+          <li>Capturing biodiversity changes across land use transitions using expert surveys</li>
+          <li>Estimating carbon sequestration and displacement using life-cycle approaches</li>
+          <li>Developing open-source tools and training materials for stakeholders</li>
+          <li>Supporting policy evaluation under Food Vision 2030, Climate Action Plan, and EU Green Deal</li>
+        </ul>
+      </section>
+      
+      <section id="carbon-impact" class="section">
+        <div class="section-head">
+          <h2>Carbon and Climate Impact</h2>
+          <p class="lead">
+            Afforestation is a key pathway for Ireland to meet its climate goals. The AFFOR model shows that new forests
+            capture carbon in trees, soils, and harvested wood products—and also reduce emissions by displacing livestock
+            activity (the “double carbon dividend”). 
+          </p>
+        </div>
+      
+        <div class="layout">
+          <!-- Left: Interactive cards -->
+          <div class="cards" role="list">
+            <button class="card" role="listitem" data-key="trees" aria-controls="detail" aria-expanded="false">
+              <span class="icon" aria-hidden="true">
+                <!-- pine svg -->
+                <svg viewBox="0 0 24 24"><path d="M12 2l5 7h-3l4 6h-3l3 5H6l3-5H6l4-6H7l5-7zM11 22v-2h2v2h-2z"/></svg>
+              </span>
+              <span class="title">Trees</span>
+              <span class="blurb">Rapid uptake during growth; strongest for Sitka spruce.</span>
+            </button>
+      
+            <button class="card" role="listitem" data-key="soils" aria-controls="detail" aria-expanded="false">
+              <span class="icon" aria-hidden="true">
+                <!-- globe svg -->
+                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1 2.1C8.7 4.5 6.9 6.9 6.4 10H11V4.1zM6.4 14c.5 3.1 2.3 5.5 4.6 5.9V14H6.4zM13 19.9c2.3-.4 4.1-2.8 4.6-5.9H13v5.9zM17.6 10c-.5-3.1-2.3-5.5-4.6-5.9V10h4.6z"/></svg>
+              </span>
+              <span class="title">Soils</span>
+              <span class="blurb">Forest soils build organic matter & long-lived carbon.</span>
+            </button>
+      
+            <button class="card" role="listitem" data-key="wood" aria-controls="detail" aria-expanded="false">
+              <span class="icon" aria-hidden="true">
+                <!-- log svg -->
+                <svg viewBox="0 0 24 24"><path d="M3 12a6 6 0 0012 0V7H9a6 6 0 00-6 5zM15 7h2a4 4 0 010 8h-2V7z"/></svg>
+              </span>
+              <span class="title">Wood Products</span>
+              <span class="blurb">Harvested Wood Products (HWP) store carbon for decades.</span>
+            </button>
+      
+            <button class="card" role="listitem" data-key="avoided" aria-controls="detail" aria-expanded="false">
+              <span class="icon" aria-hidden="true">
+                <!-- cow → X svg -->
+                <svg viewBox="0 0 24 24"><path d="M4 8h10l2 3h4v2h-2l-1 3h-3v3h-2v-3H8v3H6v-3H5l-1-3H2v-2h2l0-3zM8 11h6"/></svg>
+              </span>
+              <span class="title">Avoided Emissions</span>
+              <span class="blurb">Less livestock → lower CH₄ & N₂O from agriculture.</span>
+            </button>
+          </div>
+      
+          <!-- Right: Dynamic detail panel -->
+          <aside id="detail" class="detail" aria-live="polite">
+            <div class="placeholder">
+              <p>Hover, focus or tap a card to learn more.</p>
+            </div>
+            <div class="content" hidden>
+              <h3 id="detail-title"></h3>
+              <p id="detail-text"></p>
+              <ul id="detail-facts" class="facts"></ul>
+            </div>
+      
+            <!-- Quick Facts (always visible) -->
+            <div class="quickfacts">
+              <h4>Quick facts (AFFOR)</h4>
+              <ul>
+                <li>Forestry privately outperforms agriculture on ~1/3 of farms; valuing carbon lifts positive social returns from ~47% at €32/tCO₂ to ~97% at €100/tCO₂. </li>
+                <li>1 ha of unthinned Sitka spruce offsets ~3.97 livestock units (≈2.34–4.13 LU depending on soil). </li>
+                <li>Sitka: highest carbon & timber; Birch/Oak: stronger biodiversity, especially after thinning. </li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </section>
+      
+      <style>
+      /* ---- Design tokens ---- */
+      #carbon-impact {
+        --bg: #f7faf9;
+        --card-bg: #eaf5ef;
+        --card-bg-hover: #d6ede3;
+        --ink: #0b2b1e;
+        --muted: #4a5d55;
+        --brand: #0e6b3a;
+        --ring: #6bd3a3;
+        --border: #b9d7c7;
+        --shadow: 0 6px 18px rgba(3, 51, 30, .08);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: clamp(16px, 2vw, 28px);
+        margin: 32px auto;
+        max-width: 1100px;
+        box-shadow: var(--shadow);
+      }
+      
+      .section-head h2 {
+        margin: 0 0 6px;
+        color: var(--brand);
+        letter-spacing: .2px;
+      }
+      .section-head .lead { color: var(--muted); margin: 0; }
+      
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: 18px;
+      }
+      @media (min-width: 900px) {
+        .layout { grid-template-columns: 1fr 1fr; }
+      }
+      
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0,1fr));
+        gap: 14px;
+      }
+      @media (min-width: 540px) {
+        .cards { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      }
+      @media (min-width: 760px) {
+        .cards { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      }
+      
+      .card {
+        appearance: none;
+        background: var(--card-bg);
+        border: 1.5px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+        text-align: left;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+        display: grid;
+        grid-template-columns: 44px 1fr;
+        grid-template-rows: auto auto;
+        gap: 6px 12px;
+        align-items: center;
+        transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+      }
+      .card:focus-visible,
+      .card:hover {
+        background: var(--card-bg-hover);
+        transform: translateY(-2px);
+        outline: none;
+        border-color: var(--ring);
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 35%, white);
+      }
+      .card .icon { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; background:#fff; border:1px solid var(--border); }
+      .card .icon svg { width: 24px; height: 24px; fill: var(--brand); }
+      .card .title { font-weight: 700; color: var(--ink); }
+      .card .blurb { grid-column: 2/3; color: var(--muted); font-size: .95rem; }
+      
+      .detail {
+        background: #ffffff;
+        border: 1.5px solid var(--border);
+        border-radius: 14px;
+        padding: 18px 18px 12px;
+        box-shadow: var(--shadow);
+        min-height: 220px;
+      }
+      .detail .placeholder { color: var(--muted); font-style: italic; }
+      .detail h3 { margin: 0 0 6px; color: var(--ink); }
+      .detail p { margin: 0 0 10px; color: var(--ink); }
+      .facts { margin: 0; padding-left: 18px; color: var(--muted); }
+      .facts li { margin: 4px 0; }
+      
+      .quickfacts { border-top: 1px dashed var(--border); margin-top: 14px; padding-top: 12px; }
+      .quickfacts h4 { margin: 0 0 6px; color: var(--brand); }
+      .quickfacts ul { margin: 0; padding-left: 18px; color: var(--muted); }
+      .quickfacts li { margin: 6px 0; }
+      </style>
+      
+      <script>
+      const DETAIL = {
+        trees: {
+          title: "Trees",
+          text:
+            "Growing forests remove CO₂ from the atmosphere and store it in living biomass and dead organic matter. Sitka spruce shows the fastest early uptake, while native broadleaves add biodiversity value as stands mature.",
+          facts: [
+            "Spruce delivers the highest early carbon and timber yields.",
+            "Broadleaves (Birch, Oak) catch up later in rotation and strengthen biodiversity, especially after thinning."
+          ]
+        },
+        soils: {
+          title: "Soils",
+          text:
+            "Forest soils accumulate organic matter and stabilize carbon over long periods. Soil class drives both growth and the climate effect, so species–soil matching matters for policy and advice.",
+          facts: [
+            "Productivity and carbon vary strongly by soil (brown earths, podzolics, gleys, peat).",
+            "Heterogeneity is key—identical incentives can perform very differently by soil."
+          ]
+        },
+        wood: {
+          title: "Harvested Wood Products (HWP)",
+          text:
+            "Timber and panels continue to store part of the carbon after harvest. Including HWP gives a more complete and policy-relevant climate picture.",
+          facts: [
+            "Life-cycle accounting tracks carbon from growth to products and end-use.",
+            "Using wood in place of more carbon-intensive materials increases the benefit."
+          ]
+        },
+        avoided: {
+          title: "Avoided Agricultural Emissions",
+          text:
+            "When land moves from livestock to forest, methane and nitrous oxide emissions fall because animal numbers decline. AFFOR counts this along with in-forest sequestration.",
+          facts: [
+            "Each hectare of unthinned Sitka offsets ~3.97 livestock units on average (≈2.34–4.13 depending on soil).",
+            "Combining sequestration + avoided emissions = the ‘double carbon dividend’."
+          ]
+        }
+      };
+      
+      const cards = document.querySelectorAll("#carbon-impact .card");
+      const panel = document.querySelector("#detail");
+      const placeholder = panel.querySelector(".placeholder");
+      const content = panel.querySelector(".content");
+      const h3 = document.getElementById("detail-title");
+      const p = document.getElementById("detail-text");
+      const ul = document.getElementById("detail-facts");
+      
+      function showDetail(key, btn){
+        const d = DETAIL[key];
+        if(!d) return;
+        h3.textContent = d.title;
+        p.textContent = d.text;
+        ul.innerHTML = "";
+        d.facts.forEach(f => {
+          const li = document.createElement("li");
+          li.textContent = f;
+          ul.appendChild(li);
+        });
+        placeholder.hidden = true;
+        content.hidden = false;
+      
+        cards.forEach(c=>c.setAttribute("aria-expanded","false"));
+        if(btn) btn.setAttribute("aria-expanded","true");
+      }
+      
+      cards.forEach(btn=>{
+        const key = btn.dataset.key;
+        btn.addEventListener("mouseenter", ()=>showDetail(key, btn));
+        btn.addEventListener("focus", ()=>showDetail(key, btn));
+        btn.addEventListener("click", ()=>showDetail(key, btn));
+        btn.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); showDetail(key, btn);} });
+      });
+      </script>
+      
+
+    </section>
+
+    <!-- ====== Interactive Carbon Chart ====== -->
+<section id="carbon-curve" class="carbon-section">
+    <h3 class="chart-title">Livewood and HWP Carbon Sequestration (Unthinned Sitka Spruce, YC20)</h3>
+    <p class="chart-sub">
+      Differential carbon sequestration over 200 years in above- and below-ground livewood and harvested wood products.
+      Hover the line to see values; harvest years are marked.
+    </p>
+  
+    <div class="chart-wrap">
+      <canvas id="carbonChart" aria-label="Stacked carbon sequestration chart" role="img"></canvas>
+    </div>
+  
+    <div id="carbonCaption" class="chart-caption">
+      Tip: move your cursor along the chart to see annual values and a short explanation.
+    </div>
+  </section>
+  
+  <!-- Chart styles (match your palette) -->
+  <style>
+  .carbon-section { 
+    background: #ffffff; border: 1px solid #b9d7c7; border-radius: 14px;
+    padding: clamp(16px,2vw,24px); box-shadow: 0 6px 18px rgba(3,51,30,.06);
+    margin-top: 24px;
+  }
+  .chart-title { margin: 0 0 6px; color: #0e6b3a; }
+  .chart-sub { margin: 0 0 10px; color: #4a5d55; }
+  .chart-wrap { position: relative; width: 100%; max-width: 980px; margin: 0 auto; }
+  .chart-caption { margin-top: 10px; color: #2a3a34; font-size: .95rem; }
+  .harvest-line { border-left: 1px dashed #0e6b3a; }
+  </style>
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  
+  <script>
+  /*
+    Simple illustrative carbon dynamics for Unthinned SS (YC20)
+    - Rotation length ~ 40 years (no thinning), 5 rotations in 200 yrs
+    - Above-ground livewood grows then drops to ~0 at harvest
+    - Below-ground livewood ~ 28% of above-ground; decays slowly after harvest
+    - HWP: share of harvested carbon goes into products with decay; energy wood oxidizes quickly
+    Replace this with your model outputs for exact results.
+  */
+  (function(){
+    const years = 201;                  // 0..200
+    const rotation = 40;                // years per rotation (unthinned)
+    const rotations = [40,80,120,160,200];
+    const K = 240;                      // asymptotic AG livewood tCO2e/ha (illustrative)
+    const tau = 12;                     // growth time constant (yrs)
+    const bgShare = 0.28;               // BG ~ 28% of AG (illustrative)
+    const bgDecay = 0.015;              // ~1.5%/yr decay after harvest to DOM
+    const HWP_share = 0.55;             // 55% of harvested C to HWP
+    const HWP_half_life = 35;           // structural products half-life (yrs)
+    const HWP_k = Math.log(2)/HWP_half_life;
+    const energy_share = 1 - HWP_share; // quick oxidation (we assume instant here)
+  
+    // helper: growth within a rotation year tRot (0..rotation)
+    function agGrowth(tRot){ return K * (1 - Math.exp(-tRot / tau)); }
+  
+    // arrays
+    const t = Array.from({length: years}, (_,i)=>i);
+    const ag = new Array(years).fill(0);
+    const bg = new Array(years).fill(0);
+    const hwp = new Array(years).fill(0);
+  
+    // state variables
+    let bgStock = 0;
+    let hwpStock = 0;
+  
+    for(let y=0; y<years; y++){
+      // where we are inside the current rotation
+      const tRot = y % rotation;
+      // AG livewood
+      let agNow = agGrowth(tRot);
+  
+      // if it's an exact harvest year (except y=0), drop AG and transfer to HWP/energy; BG decays gradually
+      let harvest = (tRot === 0 && y>0);
+      if(harvest){
+        const agBefore = agGrowth(rotation-1);     // stock just before harvest
+        const removed = agBefore;                  // simplified: remove almost all AG livewood
+        const toHWP = removed * HWP_share;
+        const toEnergy = removed * energy_share;   // assumed to oxidize this year
+  
+        hwpStock += toHWP;                         // add to product pool
+        // energy wood: immediate emission (not stored), so no stock added
+  
+        agNow = 0.5; // tiny residual right after harvest
+      }
+  
+      // BG dynamics: track as share of current AG + slow decay from previous BG pool after harvests
+      // target BG pool tends to bgShare * AG; adjust toward it, and apply small natural decay
+      const targetBG = bgShare * agNow;
+      // move 20% of the gap toward target (stability), then decay 1.5%/yr (to DOM)
+      bgStock = (bgStock + 0.20*(targetBG - bgStock)) * (1 - bgDecay);
+  
+      // HWP decay each year
+      hwpStock *= Math.exp(-HWP_k);
+  
+      // record stocks
+      ag[y]  = agNow;
+      bg[y]  = bgStock;
+      hwp[y] = hwpStock;
+    }
+  
+    // Datasets (stacked)
+    const ctx = document.getElementById('carbonChart').getContext('2d');
+    const data = {
+      labels: t,
+      datasets: [
+        {label:'Above-ground livewood', data: ag, fill: true, stack: 'carbon'},
+        {label:'Below-ground livewood', data: bg, fill: true, stack: 'carbon'},
+        {label:'Harvested Wood Products (HWP)', data: hwp, fill: true, stack: 'carbon'}
+      ]
+    };
+  
+    // vertical harvest lines as annotations (plugin-free using scriptable grid color)
+    const harvestSet = new Set(rotations);
+  
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data,
+      options: {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            callbacks: {
+              footer: (items) => {
+                const y = items[0].parsed.x;
+                const total = items.reduce((s,i)=>s + i.parsed.y, 0);
+                return `Total: ${total.toFixed(1)} tCO₂e/ha`;
+              }
+            }
+          },
+          title: { display: false }
+        },
+        scales: {
+          x: {
+            title: { display: true, text: 'Year' },
+            ticks: { autoSkip: true, maxTicksLimit: 12 },
+            grid: {
+              color: (ctx) => {
+                // draw dashed green line on harvest years
+                const x = ctx.tick.value;
+                return harvestSet.has(x) ? '#0e6b3a44' : '#e6efe9';
+              },
+              borderDash: (ctx) => {
+                const x = ctx.tick.value;
+                return harvestSet.has(x) ? [4,4] : [];
+              }
+            }
+          },
+          y: {
+            title: { display: true, text: 'tCO₂e per ha (stock)' },
+            beginAtZero: true,
+            grid: { color: '#e6efe9' }
+          }
+        },
+        elements: {
+          line: { tension: 0.3, borderWidth: 2 },
+          point: { radius: 0, hitRadius: 8 }
+        }
+      }
+    });
+  
+    // Caption updater
+    const caption = document.getElementById('carbonCaption');
+    function updateCaption(yearIdx){
+      const year = t[yearIdx];
+      const agv = ag[yearIdx], bgv = bg[yearIdx], h = hwp[yearIdx];
+      const total = agv + bgv + h;
+      let note = `Year ${year}: Above-ground ${agv.toFixed(1)}, Below-ground ${bgv.toFixed(1)}, HWP ${h.toFixed(1)} tCO₂e/ha (Total ${total.toFixed(1)}). `;
+      if (year>0 && year % rotation === 0){
+        note += `Harvest year: above-ground drops; part of removed carbon enters HWP (with decay), while below-ground decomposes slowly and contributes to the DOM pool.`;
+      } else if ((year % rotation) === rotation-1){
+        note += `End of rotation approaching—stocks near peak before harvest.`;
+      } else {
+        note += `Growing phase—above-ground drives most of the increase.`;
+      }
+      caption.textContent = note;
+    }
+  
+    // react to hover / focus
+    document.getElementById('carbonChart').addEventListener('mousemove', (evt)=>{
+      const points = chart.getElementsAtEventForMode(evt, 'index', {intersect:false}, false);
+      if(points.length){ updateCaption(points[0].index); }
+    });
+    document.getElementById('carbonChart').addEventListener('mouseleave', ()=>{
+      caption.textContent = 'Tip: move your cursor along the chart to see annual values and a short explanation.';
+    });
+  
+    // initialize caption at year 0
+    updateCaption(0);
+  })();
+  </script>
+  
+
+ <section id="forest-biodiversity" class="fbx-section" aria-labelledby="fbx-title">
+  <header class="fbx-head">
+    <h2 id="fbx-title">Forest Biodiversity Explorer</h2>
+    <p class="fbx-lead">
+      Explore how biodiversity varies by <strong>species</strong>, <strong>soil</strong>, <strong>stage</strong> and <strong>management</strong>.
+      Broadleaves (Birch, Oak) tend to score higher than Sitka spruce; scores are lowest at canopy closure and improve after thinning. Soils strongly moderate outcomes.
+    </p>
+  </header>
+
+  <div class="fbx-controls" role="group" aria-label="Selectors">
+    <label class="fbx-field">Species
+      <select id="species" aria-label="Species">
+        <option value="spruce">Sitka Spruce</option>
+        <option value="birch">Birch</option>
+        <option value="oak">Oak</option>
+      </select>
+    </label>
+
+    <label class="fbx-field">Soil
+      <select id="soil" aria-label="Soil">
+        <option value="brown">Brown Earth</option>
+        <option value="podzolic">Podzolic</option>
+        <option value="gley">Gley</option>
+        <option value="peat">Peat</option>
+      </select>
+    </label>
+
+    <label class="fbx-field">Stage
+      <select id="stage" aria-label="Stage">
+        <option value="open">Open</option>
+        <option value="canopy">Canopy Closure</option>
+        <option value="mature">Mature</option>
+      </select>
+    </label>
+
+    <label class="fbx-field">Management
+      <select id="management" aria-label="Management">
+        <option value="thinned">Thinned</option>
+        <option value="unthinned">Unthinned</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="fbx-result" id="biodiversity-result" role="status" aria-live="polite">
+    <div class="fbx-badge" id="score-badge">–</div>
+    <div class="fbx-text">
+      <div class="fbx-title" id="result-title">Select options to see biodiversity outcome</div>
+      <p class="fbx-desc" id="result-desc">
+        Choose a species, soil, stage and management to view an indicative biodiversity level and explanation.
+      </p>
+      <ul class="fbx-legend" aria-label="Legend">
+        <li><span class="lv lv1"></span> Very Low</li>
+        <li><span class="lv lv2"></span> Low</li>
+        <li><span class="lv lv3"></span> Moderate</li>
+        <li><span class="lv lv4"></span> High</li>
+        <li><span class="lv lv5"></span> Very High</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer class="fbx-foot">
+    <small>
+      Based on AFFOR’s Delphi-based biodiversity module (flora, invertebrates, vertebrates) across species × soil × stage × management.
+    </small>
+  </footer>
+</section>
+
+<style>
+/* ========== Layout & Aesthetics ========== */
+.fbx-section{
+  --ink:#0b2b1e; --muted:#4a5d55; --brand:#0e6b3a; --ring:#6bd3a3; --bord:#cfe3d6;
+  --bg:#ffffff; --panel:#f5faf7;
+  max-width: 980px; margin: 56px auto; padding: 22px clamp(16px,2vw,28px);
+  background: var(--bg); border:1px solid var(--bord); border-radius:16px;
+  box-shadow: 0 8px 22px rgba(3,51,30,.06);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+.fbx-head h2{ color:var(--brand); margin:0 0 6px; letter-spacing:.2px; }
+.fbx-lead{ color:var(--muted); margin:0; }
+
+.fbx-controls{
+  display:grid; gap:14px; grid-template-columns: repeat(2, minmax(0,1fr));
+  margin:18px 0 10px;
+}
+@media (min-width:800px){ .fbx-controls{ grid-template-columns: repeat(4, minmax(0,1fr)); } }
+
+.fbx-field{ display:flex; flex-direction:column; gap:6px; color:var(--ink); font-weight:600; }
+.fbx-field select{
+  appearance:none; padding:10px 12px; border:1px solid var(--bord); border-radius:10px;
+  background: var(--panel); color:var(--ink); font-weight:500;
+  transition:border .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.fbx-field select:focus{ outline:none; border-color:var(--ring); box-shadow:0 0 0 3px color-mix(in oklab, var(--ring) 28%, white); background:#fff; }
+
+/* Result panel */
+.fbx-result{
+  display:grid; grid-template-columns: 110px 1fr; gap:14px; align-items:center;
+  margin-top:12px; padding:16px; border:1.5px solid var(--bord); border-radius:14px; background:#f0f7f3;
+}
+.fbx-badge{
+  width:100px; height:100px; border-radius:14px; display:grid; place-items:center;
+  font-weight:800; font-size:1.05rem; color:#fff; background:#a0b5ac;
+}
+.fbx-text .fbx-title{ font-weight:800; color:var(--ink); margin-bottom:2px; }
+.fbx-text .fbx-desc{ color:var(--muted); margin:.25rem 0 .5rem; }
+.fbx-legend{ display:flex; flex-wrap:wrap; gap:12px; padding:0; margin:0; list-style:none; color:var(--muted); font-size:.9rem; }
+.lv{ display:inline-block; width:14px; height:14px; border-radius:4px; margin-right:6px; vertical-align:middle; }
+.lv1{ background:#c7d6cf; } .lv2{ background:#93b3a4; } .lv3{ background:#5a927e; }
+.lv4{ background:#2d795f; } .lv5{ background:#0e6b3a; }
+
+.fbx-foot{ margin-top:10px; color:var(--muted); }
+
+/* Score color classes */
+.badge-vl{ background:#c7d6cf; } /* very low */
+.badge-l { background:#93b3a4; }
+.badge-m { background:#5a927e; }
+.badge-h { background:#2d795f; }
+.badge-vh{ background:#0e6b3a; }
+/* override: ensure background stays light */
+#forest-biodiversity.fbx-section{
+  background:#ffffff !important;   /* panel beyaz */
+}
+
+/* üst başlık (başlık ve açıklama) bantlarını şeffaf bırak */
+#forest-biodiversity .fbx-head{
+  background:transparent !important;
+}
+
+#forest-biodiversity .fbx-foot{
+  background:transparent !important;
+}
+
+</style>
+
+<script>
+/*
+  Simple, report-aligned scoring logic (illustrative):
+  - Species base: Oak 5, Birch 4, Spruce 2
+  - Soil adj.: Brown +1, Podzolic +0, Gley -1, Peat -2 (min/max clipped)
+  - Stage adj.: Open 0, Canopy -2, Mature +1
+  - Management: Thinned +1, Unthinned 0
+  Final score 1..5 → Very Low..Very High, with an explanation string.
+  Replace this with your Delphi scores matrix when ready.
+*/
+const el = (id)=>document.getElementById(id);
+const resultBox  = el("biodiversity-result");
+const badge      = el("score-badge");
+const titleEl    = el("result-title");
+const descEl     = el("result-desc");
+
+const speciesBase = { spruce:2, birch:4, oak:5 };
+const soilAdj     = { brown:1, podzolic:0, gley:-1, peat:-2 };
+const stageAdj    = { open:0, canopy:-2, mature:1 };
+const mgmtAdj     = { thinned:1, unthinned:0 };
+
+const labels = ["Very Low","Low","Moderate","High","Very High"];
+const badgeClass = ["badge-vl","badge-l","badge-m","badge-h","badge-vh"];
+
+function explain(species, soil, stage, mgmt, score){
+  const bits = [];
+  // species
+  if(species==="oak") bits.push("native oak supports rich understorey and structural diversity");
+  else if(species==="birch") bits.push("native birch promotes light and early-successional flora");
+  else bits.push("Sitka spruce has lower understory diversity overall");
+  // soil
+  if(soil==="peat") bits.push("peat soils limit species richness");
+  else if(soil==="brown") bits.push("brown earths favour higher biodiversity");
+  else if(soil==="gley") bits.push("gley soils constrain diversity in wetter conditions");
+  // stage
+  if(stage==="canopy") bits.push("canopy closure reduces light");
+  else if(stage==="mature") bits.push("mature structure increases niches");
+  // management
+  if(mgmt==="thinned") bits.push("thinning improves light and heterogeneity");
+  return bits.join("; ") + ".";
+}
+
+function update(){
+  const s  = el("species").value;
+  const so = el("soil").value;
+  const st = el("stage").value;
+  const m  = el("management").value;
+
+  let raw = (speciesBase[s] ?? 3) + (soilAdj[so] ?? 0) + (stageAdj[st] ?? 0) + (mgmtAdj[m] ?? 0);
+  raw = Math.max(1, Math.min(5, raw));
+  const idx = raw-1;
+
+  // badge
+  badge.textContent = labels[idx];
+  badge.className = "fbx-badge " + badgeClass[idx];
+
+  // title & description
+  const nice = {
+    spruce:"Sitka Spruce", birch:"Birch", oak:"Oak",
+    brown:"Brown Earth", podzolic:"Podzolic", gley:"Gley", peat:"Peat",
+    open:"Open", canopy:"Canopy Closure", mature:"Mature",
+    thinned:"Thinned", unthinned:"Unthinned"
+  };
+  titleEl.textContent = `${nice[s]} on ${nice[so]} • ${nice[st]} • ${nice[m]}`;
+  descEl.textContent  = explain(s,so,st,m,raw);
+}
+
+// bind
+document.querySelectorAll("#forest-biodiversity select").forEach(sel=>{
+  sel.addEventListener("change", update);
+});
+update(); // initial
+</script>
+
+    
+    <section id="ag-biodiversity">
+        <h2>Agricultural → Forest: Biodiversity Change (First 0–8 Years)</h2>
+        <p>
+          Explore how biodiversity is expected to change when grassland is planted with Sitka spruce, Birch, or Oak.
+          Select a soil type to view % change estimates by farm system and grazing intensity.
+        </p>
+      
+        <!-- Soil tabs -->
+        <div class="soil-tabs" role="tablist" aria-label="Soil types">
+          <button class="soil-tab active" data-soil="brown" role="tab" aria-selected="true">Brown Earth</button>
+          <button class="soil-tab" data-soil="podzolic" role="tab" aria-selected="false">Podzolic</button>
+          <button class="soil-tab" data-soil="gley" role="tab" aria-selected="false">Gley</button>
+          <button class="soil-tab" data-soil="organic" role="tab" aria-selected="false">Organic</button>
+        </div>
+      
+        <!-- Heatmap -->
+        <div class="heatmap-wrap" aria-live="polite">
+          <table class="heatmap">
+            <thead>
+              <tr>
+                <th style="width:40%">Farm system &amp; grazing</th>
+                <th>Sitka spruce</th>
+                <th>Birch</th>
+                <th>Oak</th>
+              </tr>
+            </thead>
+            <tbody id="heatmap-body">
+              <!-- JS fills rows -->
+            </tbody>
+          </table>
+          <div class="legend">
+            <span>↓ loss</span>
+            <div class="grad"></div>
+            <span>↑ gain</span>
+          </div>
+          <p class="footnote">
+            Values shown are illustrative sample scores from the expert quick-scoring sheet (Table 3). Replace with final survey medians when available.
+          </p>
+        </div>
+      </section>
+      
+      <style>
+      #ag-biodiversity { max-width: 980px; margin: 48px auto; }
+      #ag-biodiversity h2 { color: var(--green, #004225); margin-bottom: .5rem; }
+      #ag-biodiversity p { color: #444; }
+      
+      .soil-tabs { display:flex; gap:8px; margin:16px 0 12px; flex-wrap:wrap; }
+      .soil-tab {
+        border: 2px solid var(--green, #004225);
+        background:#fff; color:var(--green, #004225);
+        padding:8px 14px; border-radius:999px; cursor:pointer; font-weight:600;
+      }
+      .soil-tab.active { background: var(--green, #004225); color:#fff; }
+      
+      .heatmap-wrap { background:#fff; border-radius:12px; box-shadow:0 0 15px rgba(0,66,37,.06); padding:16px; }
+      .heatmap { width:100%; border-collapse:separate; border-spacing:0; }
+      .heatmap thead th {
+        text-align:left; background:#f6faf7; color:#1f3b2d; padding:10px;
+        border-bottom:2px solid #cde7da;
+      }
+      .heatmap tbody td, .heatmap tbody th { padding:12px 10px; border-bottom:1px solid #eef3ef; }
+      .heatmap tbody tr:last-child td, .heatmap tbody tr:last-child th { border-bottom:none; }
+      
+      .cell {
+        text-align:center; font-weight:700; border-radius:8px; padding:10px;
+        color:#0b1d14; min-width:110px;
+      }
+      .cell.small { font-weight:600; }
+      
+      .legend { display:flex; align-items:center; gap:8px; margin-top:10px; font-size:.9rem; color:#555; }
+      .legend .grad {
+        height:10px; width:160px; border-radius:999px; border:1px solid #cde7da;
+        background: linear-gradient(90deg, #f7d9d9 0%, #fff6e5 35%, #e9f5ef 65%, #c9ebdd 100%);
+      }
+      .footnote { font-size:.85rem; color:#666; margin-top:8px; }
+      
+      .badge {
+        display:inline-block; margin-left:6px; font-size:.75rem; font-weight:700;
+        padding:2px 6px; border-radius:6px; background:#eef7f1; color:#2a6b4f;
+      }
+      </style>
+      
+      <script>
+      // --- SAMPLE DATA (replace with final medians when ready) ---
+      // Structure: soil -> rows [{label, sitka, birch, oak}]
+      const data = {
+        brown: [
+          { label: "Dairy/Beef — Highly stocked (>1.7 LU/ha)", sitka: 15, birch: 20, oak: 25 }
+        ],
+        podzolic: [
+          { label: "Dairy/Beef — Intensive/moderate (1.4–1.7 LU/ha)", sitka: 9, birch: 10, oak: 8 }
+        ],
+        gley: [
+          { label: "Beef/Sheep — Moderate (0.92–1.4 LU/ha)", sitka: 0, birch: 0, oak: 0 }
+        ],
+        organic: [
+          { label: "Beef — Extensive/low (0.10–0.92 LU/ha)", sitka: 17, birch: 12, oak: 1 },
+          { label: "Sheep — Extensive/low (0.10–0.92 LU/ha)", sitka: 15, birch: 10, oak: 1 }
+        ]
+      };
+      
+      // heat color helper (negatives to red, positives to green, 0 neutral)
+      function colorFor(val){
+        // clamp -30..+30 for gradient
+        const v = Math.max(-30, Math.min(30, val || 0));
+        if (v === 0) return "#fffdf7";
+        // interpolate: red(>neg), amber(near 0), green(>pos)
+        if (v < 0) {
+          const t = Math.abs(v)/30;
+          return `rgba(247, 217, 217, ${0.35 + 0.45*t})`; // pale red
+        } else {
+          const t = v/30;
+          return `rgba(201, 235, 221, ${0.35 + 0.45*t})`; // pale green
+        }
+      }
+      
+      function badgeFor(val){
+        if (val > 0) return `<span class="badge">+${val}%</span>`;
+        if (val < 0) return `<span class="badge">${val}%</span>`;
+        return `<span class="badge" style="background:#fff6e5;color:#8a6b00;">0%</span>`;
+      }
+      
+      function renderSoil(soilKey){
+        const body = document.getElementById("heatmap-body");
+        body.innerHTML = "";
+        (data[soilKey] || []).forEach(row => {
+          const tr = document.createElement("tr");
+      
+          const th = document.createElement("th");
+          th.textContent = row.label;
+          tr.appendChild(th);
+      
+          ["sitka","birch","oak"].forEach(sp => {
+            const td = document.createElement("td");
+            const v = row[sp];
+            td.innerHTML = `<div class="cell" style="background:${colorFor(v)}">${badgeFor(v)}</div>`;
+            tr.appendChild(td);
+          });
+      
+          body.appendChild(tr);
+        });
+      }
+      
+      // init
+      renderSoil("brown");
+      
+      // tab handlers
+      document.querySelectorAll(".soil-tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".soil-tab").forEach(b=>b.classList.remove("active"));
+          btn.classList.add("active");
+          document.querySelectorAll(".soil-tab").forEach(b=>b.setAttribute("aria-selected","false"));
+          btn.setAttribute("aria-selected","true");
+          renderSoil(btn.dataset.soil);
+        });
+      });
+      </script>
+
+<section id="project-outputs" class="outputs-section">
+    <header class="outputs-head">
+      <h2>Project Outputs</h2>
+      <p>
+        The AFFOR model provides new insights into the economics, climate impacts, and biodiversity outcomes 
+        of afforestation in Ireland, supporting evidence-based policy for sustainable land use.
+      </p>
+    </header>
+  
+    <div class="outputs-grid">
+      <div class="output-card">
+        <div class="icon">💶</div>
+        <h3>Economic Viability</h3>
+        <p>
+          Forestry is privately profitable on ~1/3 of farms. When carbon is valued, 
+          social returns rise to ~47% at €32/tCO₂ and ~97% at €100/tCO₂.
+        </p>
+      </div>
+  
+      <div class="output-card">
+        <div class="icon">🌍</div>
+        <h3>Carbon & Climate</h3>
+        <p>
+          Each hectare of unthinned Sitka spruce offsets ~3.97 livestock units. 
+          Afforestation delivers a “double carbon dividend”: sequestration plus avoided emissions.
+        </p>
+      </div>
+  
+      <div class="output-card">
+        <div class="icon">🦋</div>
+        <h3>Biodiversity</h3>
+        <p>
+          Native broadleaves (Birch, Oak) generally enhance flora and fauna. 
+          Canopy closure reduces scores, while thinning improves diversity.
+        </p>
+      </div>
+  
+      <div class="output-card">
+        <div class="icon">📑</div>
+        <h3>Policy Relevance</h3>
+        <p>
+          AFFOR integrates farm-level economics, carbon, and biodiversity. 
+          It informs Ireland’s Climate Action Plan and EU Green Deal commitments.
+        </p>
+      </div>
+    </div>
+  </section>
+  
+  <style>
+    
+    .outputs-section{
+  max-width:1100px; margin:60px auto; padding:30px 20px;
+  background:#ffffff !important;   /* beyaz zorunlu */
+  border-radius:16px; border:1px solid #d9eadd;
+  box-shadow:0 8px 22px rgba(0,66,37,.06); text-align:center;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+
+.outputs-head{
+  background:transparent !important;  /* koyu header’ı bastır */
+  padding-bottom:10px;
+  border-bottom:1px solid #e6f0eb;
+}
+.outputs-head h2{ color:#0e6b3a; margin-bottom:8px; }
+.outputs-head p{ color:#4a5d55; margin:0 auto 26px; max-width:700px; font-size:1.05rem; }
+
+.outputs-grid{
+  display:grid; gap:20px;
+  grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
+  justify-items:center;   /* tek kalan kartı ortalar */
+}
+
+.output-card{
+  background:#f7fbf9; border:1.5px solid #cfe3d6; border-radius:14px;
+  padding:20px; box-shadow:0 4px 12px rgba(0,66,37,.05);
+  display:flex; flex-direction:column; align-items:center; text-align:center;
+  transition:transform .2s ease, background .2s ease;
+  width:100%; max-width:260px;  /* kartları aynı genişlikte yapar */
+}
+.output-card:hover{ background:#ecf6f1; transform:translateY(-3px); }
+.output-card .icon{ font-size:2rem; margin-bottom:10px; }
+.output-card h3{ margin:0 0 8px; color:#0b2b1e; font-size:1.1rem; }
+.output-card p{ margin:0; color:#4a5d55; font-size:.95rem; line-height:1.4; }
+
+  </style>
+  
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 AFFOR Project | Funded by the EPA Research Programme 2021–2030</p>
+  </footer>
+
+</body>
+</html>

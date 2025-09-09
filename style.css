@@ -1,0 +1,137 @@
+/* style.css */
+
+:root {
+    --green: #004225;
+    --light-green: #e9f5ef;
+    --gray: #555;
+    --font-main: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: var(--font-main);
+    background-color: var(--light-green);
+    color: var(--gray);
+    line-height: 1.6;
+  }
+  
+  header {
+    background-color: var(--green);
+    color: white;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  header h1 {
+    margin-bottom: 0.5rem;
+    font-size: 2.2rem;
+    letter-spacing: -0.5px;
+  }
+  
+  header p {
+    font-style: italic;
+    font-size: 1.1rem;
+    color: #d8f2e6;
+  }
+  
+  nav {
+    background-color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+  
+  nav ul {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 1rem 0;
+  }
+  
+  nav ul li {
+    margin: 0.8rem 1.5rem;
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+    color: var(--green);
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+  
+  nav ul li a:hover {
+    background-color: var(--light-green);
+    color: #2b9c70;
+  }
+  
+  main {
+    max-width: 1000px;
+    margin: 2.5rem auto;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 66, 37, 0.07);
+  }
+  
+  section {
+    margin-bottom: 3rem;
+  }
+  
+  section h2 {
+    color: var(--green);
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #cce8dd;
+    padding-bottom: 0.6rem;
+    font-size: 1.6rem;
+  }
+  
+  ul {
+    padding-left: 1.5rem;
+  }
+  
+  ul li {
+    margin-bottom: 0.6rem;
+    line-height: 1.5;
+  }
+  
+  footer {
+    background-color: var(--green);
+    color: white;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 4rem;
+    font-size: 0.9rem;
+  }
+  
+  .logo-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    padding: 15px 0;
+    background-color: white;
+    border-bottom: 1px solid #cce8dd;
+  }
+  
+  .logo-row img {
+    height: 65px;
+    object-fit: contain;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    filter: grayscale(20%);
+  }
+  
+  .logo-row img:hover {
+    transform: scale(1.08);
+    filter: none;
+  }
