@@ -23,8 +23,7 @@
     <ul>
       <li><a href="#overview">Overview</a></li>
       <li><a href="#objectives">Objectives</a></li>
-      <li><a href="#outputs">Outputs</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#project-outputs">Outputs</a></li>
     </ul>
   </nav>
 
@@ -311,201 +310,188 @@
     </section>
 
     <!-- ====== Interactive Carbon Chart ====== -->
-<section id="carbon-curve" class="carbon-section">
-    <h3 class="chart-title">Livewood and HWP Carbon Sequestration (Unthinned Sitka Spruce, YC20)</h3>
-    <p class="chart-sub">
-      Differential carbon sequestration over 200 years in above- and below-ground livewood and harvested wood products.
-      Hover the line to see values; harvest years are marked.
-    </p>
-  
-    <div class="chart-wrap">
-      <canvas id="carbonChart" aria-label="Stacked carbon sequestration chart" role="img"></canvas>
-    </div>
-  
-    <div id="carbonCaption" class="chart-caption">
-      Tip: move your cursor along the chart to see annual values and a short explanation.
-    </div>
-  </section>
-  
-  <!-- Chart styles (match your palette) -->
-  <style>
-  .carbon-section { 
-    background: #ffffff; border: 1px solid #b9d7c7; border-radius: 14px;
-    padding: clamp(16px,2vw,24px); box-shadow: 0 6px 18px rgba(3,51,30,.06);
-    margin-top: 24px;
-  }
-  .chart-title { margin: 0 0 6px; color: #0e6b3a; }
-  .chart-sub { margin: 0 0 10px; color: #4a5d55; }
-  .chart-wrap { position: relative; width: 100%; max-width: 980px; margin: 0 auto; }
-  .chart-caption { margin-top: 10px; color: #2a3a34; font-size: .95rem; }
-  .harvest-line { border-left: 1px dashed #0e6b3a; }
-  </style>
-  
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-  
-  <script>
-  /*
-    Simple illustrative carbon dynamics for Unthinned SS (YC20)
-    - Rotation length ~ 40 years (no thinning), 5 rotations in 200 yrs
-    - Above-ground livewood grows then drops to ~0 at harvest
-    - Below-ground livewood ~ 28% of above-ground; decays slowly after harvest
-    - HWP: share of harvested carbon goes into products with decay; energy wood oxidizes quickly
-    Replace this with your model outputs for exact results.
-  */
-  (function(){
-    const years = 201;                  // 0..200
-    const rotation = 40;                // years per rotation (unthinned)
-    const rotations = [40,80,120,160,200];
-    const K = 240;                      // asymptotic AG livewood tCO2e/ha (illustrative)
-    const tau = 12;                     // growth time constant (yrs)
-    const bgShare = 0.28;               // BG ~ 28% of AG (illustrative)
-    const bgDecay = 0.015;              // ~1.5%/yr decay after harvest to DOM
-    const HWP_share = 0.55;             // 55% of harvested C to HWP
-    const HWP_half_life = 35;           // structural products half-life (yrs)
-    const HWP_k = Math.log(2)/HWP_half_life;
-    const energy_share = 1 - HWP_share; // quick oxidation (we assume instant here)
-  
-    // helper: growth within a rotation year tRot (0..rotation)
-    function agGrowth(tRot){ return K * (1 - Math.exp(-tRot / tau)); }
-  
-    // arrays
-    const t = Array.from({length: years}, (_,i)=>i);
-    const ag = new Array(years).fill(0);
-    const bg = new Array(years).fill(0);
-    const hwp = new Array(years).fill(0);
-  
-    // state variables
-    let bgStock = 0;
-    let hwpStock = 0;
-  
-    for(let y=0; y<years; y++){
-      // where we are inside the current rotation
-      const tRot = y % rotation;
-      // AG livewood
-      let agNow = agGrowth(tRot);
-  
-      // if it's an exact harvest year (except y=0), drop AG and transfer to HWP/energy; BG decays gradually
-      let harvest = (tRot === 0 && y>0);
-      if(harvest){
-        const agBefore = agGrowth(rotation-1);     // stock just before harvest
-        const removed = agBefore;                  // simplified: remove almost all AG livewood
-        const toHWP = removed * HWP_share;
-        const toEnergy = removed * energy_share;   // assumed to oxidize this year
-  
-        hwpStock += toHWP;                         // add to product pool
-        // energy wood: immediate emission (not stored), so no stock added
-  
-        agNow = 0.5; // tiny residual right after harvest
+    <section id="carbon-curve" class="carbon-section">
+      <h3 class="chart-title">Livewood and HWP Carbon Sequestration (Unthinned Sitka Spruce, YC20)</h3>
+      <p class="chart-sub">
+        Differential carbon sequestration over 200 years in above- and below-ground livewood, harvested wood products, and litter & mortality.
+      </p>
+    
+      <div class="chart-wrap">
+        <canvas id="carbonChart" aria-label="Carbon stocks chart" role="img"></canvas>
+      </div>
+    
+      <div id="carbonCaption" class="chart-caption">
+        Tip: move your cursor along the chart to see annual values and a short explanation.
+      </div>
+    </section>
+    
+    <style>
+      .carbon-section {
+        background: #ffffff; border: 1px solid #b9d7c7; border-radius: 14px;
+        padding: clamp(16px,2vw,24px); box-shadow: 0 6px 18px rgba(3,51,30,.06);
+        margin-top: 24px;
       }
-  
-      // BG dynamics: track as share of current AG + slow decay from previous BG pool after harvests
-      // target BG pool tends to bgShare * AG; adjust toward it, and apply small natural decay
-      const targetBG = bgShare * agNow;
-      // move 20% of the gap toward target (stability), then decay 1.5%/yr (to DOM)
-      bgStock = (bgStock + 0.20*(targetBG - bgStock)) * (1 - bgDecay);
-  
-      // HWP decay each year
-      hwpStock *= Math.exp(-HWP_k);
-  
-      // record stocks
-      ag[y]  = agNow;
-      bg[y]  = bgStock;
-      hwp[y] = hwpStock;
-    }
-  
-    // Datasets (stacked)
-    const ctx = document.getElementById('carbonChart').getContext('2d');
-    const data = {
-      labels: t,
-      datasets: [
-        {label:'Above-ground livewood', data: ag, fill: true, stack: 'carbon'},
-        {label:'Below-ground livewood', data: bg, fill: true, stack: 'carbon'},
-        {label:'Harvested Wood Products (HWP)', data: hwp, fill: true, stack: 'carbon'}
-      ]
-    };
-  
-    // vertical harvest lines as annotations (plugin-free using scriptable grid color)
-    const harvestSet = new Set(rotations);
-  
-    const chart = new Chart(ctx, {
-      type: 'line',
-      data,
-      options: {
-        responsive: true,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: { position: 'top' },
-          tooltip: {
-            callbacks: {
-              footer: (items) => {
-                const y = items[0].parsed.x;
-                const total = items.reduce((s,i)=>s + i.parsed.y, 0);
-                return `Total: ${total.toFixed(1)} tCO₂e/ha`;
-              }
-            }
+      .chart-title { margin: 0 0 6px; color: #0e6b3a; }
+      .chart-sub { margin: 0 0 10px; color: #4a5d55; }
+      .chart-wrap { position: relative; width: 100%; max-width: 980px; margin: 0 auto; }
+      .chart-caption { margin-top: 10px; color: #2a3a34; font-size: .95rem; }
+    </style>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    
+    <script>
+      (function(){
+        // === AFFOR Figure1.xlsx — Unthinned Sitka (YC20), first 200 years ===
+        const years = [
+          2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034,
+          2035, 2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046, 2047, 2048, 2049, 2050, 2051, 2052, 2053, 2054,
+          2055, 2056, 2057, 2058, 2059, 2060, 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068, 2069, 2070, 2071, 2072, 2073, 2074,
+          2075, 2076, 2077, 2078, 2079, 2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089, 2090, 2091, 2092, 2093, 2094,
+          2095, 2096, 2097, 2098, 2099, 2100, 2101, 2102, 2103, 2104, 2105, 2106, 2107, 2108, 2109, 2110, 2111, 2112, 2113, 2114,
+          2115, 2116, 2117, 2118, 2119, 2120, 2121, 2122, 2123, 2124, 2125, 2126, 2127, 2128, 2129, 2130, 2131, 2132, 2133, 2134,
+          2135, 2136, 2137, 2138, 2139, 2140, 2141, 2142, 2143, 2144, 2145, 2146, 2147, 2148, 2149, 2150, 2151, 2152, 2153, 2154,
+          2155, 2156, 2157, 2158, 2159, 2160, 2161, 2162, 2163, 2164, 2165, 2166, 2167, 2168, 2169, 2170, 2171, 2172, 2173, 2174,
+          2175, 2176, 2177, 2178, 2179, 2180, 2181, 2182, 2183, 2184, 2185, 2186, 2187, 2188, 2189, 2190, 2191, 2192, 2193, 2194,
+          2195, 2196, 2197, 2198, 2199, 2200, 2201, 2202, 2203, 2204, 2205, 2206, 2207, 2208, 2209, 2210, 2211, 2212, 2213, 2214
+        ];
+    
+        // Livewood (Above Ground) NT
+        const ag = [
+          0, 0.1, 0.1, 0.2, 0.4, 0.69, 1.19, 2.08, 3.56, 6.04, 10.3, 17.42, 29.6, 49.7, 82.36, 83.16, 103.94, 124.73, 145.52, 166.31,
+          187.1, 211.65, 236.2, 260.75, 285.3, 309.85, 335.59, 361.33, 387.07, 412.81, 438.54, 463.29, 488.04, 512.79, 537.54, 562.29,
+          585.25, 608.22, 631.19, 654.15, 677.12, 698.11, 0, 0.1, 0.1, 0.2, 0.4, 0.69, 1.19, 2.08, 3.56, 6.04, 10.3, 17.42, 29.6, 49.7,
+          82.36, 83.16, 103.94, 124.73, 145.52, 166.31, 187.1, 211.65, 236.2, 260.75, 285.3, 309.85, 335.59, 361.33, 387.07, 412.81,
+          438.54, 463.29, 488.04, 512.79, 537.54, 562.29, 585.25, 608.22, 631.19, 654.15, 0, 0.1, 0.1, 0.2, 0.4, 0.69, 1.19, 2.08, 3.56,
+          6.04, 10.3, 17.42, 29.6, 49.7, 82.36, 83.16, 103.94, 124.73, 145.52, 166.31, 187.1, 211.65, 236.2, 260.75, 285.3, 309.85,
+          335.59, 361.33, 387.07, 412.81, 438.54, 463.29, 488.04, 512.79, 537.54, 562.29, 585.25, 608.22, 631.19, 654.15, 677.12, 0,
+          0.1, 0.1, 0.2, 0.4, 0.69, 1.19, 2.08, 3.56, 6.04, 10.3, 17.42, 29.6, 49.7, 82.36, 83.16, 103.94, 124.73, 145.52, 166.31, 187.1,
+          211.65, 236.2, 260.75, 285.3, 309.85, 335.59, 361.33, 387.07, 412.81, 438.54, 463.29, 488.04, 512.79, 537.54, 562.29, 585.25,
+          608.22, 631.19, 654.15, 677.12, 698.11, 0, 0.1, 0.1, 0.2, 0.4, 0.69, 1.19, 2.08, 3.56, 6.04, 10.3, 17.42, 29.6, 49.7, 82.36,
+          83.16, 103.94, 124.73, 145.52, 166.31, 187.1, 211.65, 236.2, 260.75, 285.3, 309.85, 335.59, 361.33, 387.07, 412.81, 438.54,
+          463.29, 488.04, 512.79, 537.54, 562.29, 585.25, 608.22, 631.19, 654.15
+        ];
+    
+        // Livewood (Below Ground) NT
+        const bg = [
+          0, 0.03, 0.03, 0.06, 0.09, 0.13, 0.19, 0.3, 0.47, 0.75, 1.24, 2.04, 3.43, 5.66, 9.24, 4.64, 10.19, 12.05, 14.2, 16.59,
+          19.18, 22.71, 25.09, 27.71, 30.53, 33.52, 36.89, 40.17, 43.59, 47.13, 50.76, 54.27, 58.04, 61.84, 65.69, 69.56, 73.11,
+          76.99, 80.86, 84.72, 88.56, 92, 108.62, 93.41, 80.37, 69.16, 59.52, 51.27, 44.22, 38.24, 33.22, 29.16, 26.04, 24.05,
+          23.37, 24.46, 17.71, 21.4, 21.68, 23.65, 25.23, 27.87, 29.5, 31.46, 33.71, 36.21, 39.16, 42.08, 45.18, 48.43, 51.83,
+          55.13, 58.72, 62.36, 66.07, 69.82, 73.11, 76.99, 80.86, 84.72, 92, 108.62, 93.41, 80.37, 69.16, 59.52, 51.27, 44.05,
+          37.94, 32.73, 28.3, 24.61, 21.62, 19.35, 17.93, 17.55, 17.24, 18.29, 19.5, 21.07, 22.96, 24.59, 26.55, 28.8, 31.3,
+          34.01, 36.93, 40.03, 42.08, 45.18, 48.43, 51.83, 55.13, 58.72, 62.36, 66.07, 69.82, 73.11, 76.99, 80.86, 92, 108.62,
+          93.41, 80.37, 69.16, 59.52, 51.27, 44.22, 38.24, 33.22, 29.16, 26.04, 24.05, 23.37, 24.46, 17.71, 21.4, 21.68, 23.65,
+          25.23, 27.87, 29.5, 31.46, 33.71, 36.21, 39.16, 42.08, 45.18, 48.43, 51.83, 55.13, 58.72, 62.36, 66.07, 69.82, 73.11,
+          76.99, 80.86
+        ];
+    
+        // Harvested Wood Products NT
+        const hwp = [
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 255.84, 249.88, 238.37, 232.82, 227.41, 222.12, 216.97, 211.93, 207.01, 202.22, 197.53, 192.96, 188.49, 184.14, 179.88,
+          175.73, 171.67, 167.72, 163.85, 160.08, 156.39, 152.8, 149.29, 145.86, 142.51, 139.24, 136.05, 132.93, 129.89, 126.92,
+          124.02, 121.18, 118.41, 115.71, 113.07, 110.5, 107.98, 105.52, 103.12, 100.78, 98.49, 352.1, 343.95, 335.99, 328.23, 320.65,
+          313.24, 306.02, 298.96, 292.08, 285.35, 278.79, 272.38, 266.12, 260.01, 254.04, 248.21, 242.52, 236.97, 231.55, 226.25,
+          221.08, 216.03, 211.1, 206.28, 201.58, 196.99, 192.5, 188.12, 183.84, 179.66, 175.58, 171.6, 389.28, 380.31, 371.55,
+          363, 354.65, 346.5, 338.54, 330.77, 323.18, 315.77, 308.54, 301.48, 294.58, 287.84, 281.27, 274.85, 268.57, 262.45, 256.47,
+          250.63, 244.92, 239.35, 233.91, 228.6, 223.41, 218.34, 213.39, 208.56, 203.83, 199.22, 194.72, 403.99, 394.71, 385.64,
+          376.78, 368.14, 359.7, 351.45, 343.4, 335.55, 327.87, 320.38, 313.06, 305.91, 298.94, 292.12, 285.47, 278.97, 272.62, 266.42,
+          260.37, 254.46, 248.68, 243.04, 237.53, 232.15, 226.9, 221.77, 216.75, 211.86, 207.08, 202.4
+        ];
+    
+        // Litter & Mortality and Harvest Losses NT
+        const litter = [
+          0.01, 0.03, 0.04, 0.05, 0.07, 0.09, 0.12, 0.17, 0.25, 0.39, 0.61, 0.99, 1.64, 2.71, 4.48, 6.03, 7.9, 10.04, 12.43, 15.02,
+          17.8, 20.18, 22.8, 25.62, 28.61, 31.74, 35.03, 38.45, 41.98, 45.61, 49.32, 53.09, 56.89, 60.74, 64.61, 68.51, 72.4, 76.27,
+          80.12, 83.97, 87.8, 91.58, 108.6, 93.41, 80.35, 69.12, 59.46, 51.17, 44.05, 37.94, 32.73, 28.3, 24.61, 21.62, 19.35, 17.93,
+          17.55, 17.24, 18.29, 19.5, 21.07, 22.96, 24.59, 26.55, 28.8, 31.3, 34.01, 36.93, 40.03, 43.29, 46.68, 50.18, 53.77, 57.41,
+          61.12, 64.87, 68.51, 72.4, 76.27, 80.12, 83.97, 108.6, 93.41, 80.35, 69.12, 59.46, 51.17, 44.05, 37.94, 32.73, 28.3, 24.61,
+          21.62, 19.35, 17.93, 17.55, 17.24, 18.29, 19.5, 21.07, 22.96, 24.59, 26.55, 28.8, 31.3, 34.01, 36.93, 40.03, 42.08, 45.18,
+          48.43, 51.83, 55.13, 57.41, 61.12, 64.87, 68.51, 72.4, 76.27, 80.12, 83.97, 108.6, 93.41, 80.35, 69.12, 59.46, 51.17, 44.05,
+          37.94, 32.73, 28.3, 24.61, 21.62, 19.35, 17.93, 17.55, 17.24, 18.29, 19.5, 21.07, 22.96, 24.59, 26.55, 28.8, 31.3, 34.01,
+          36.93, 40.03, 43.29, 46.68, 50.18, 53.77
+        ];
+    
+        // hasat yılları (AG keskin düşüşleri)
+        const harvestYears = [2057, 2099, 2141, 2183];
+    
+        const ctx = document.getElementById('carbonChart').getContext('2d');
+        const chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: years,
+            datasets: [
+              { label: 'Livewood (Above Ground) NT', data: ag, borderColor: '#101010', borderWidth: 2.5, fill: false, tension: 0 },
+              { label: 'Livewood (Below Ground) NT', data: bg, borderColor: '#101010', borderDash: [6,6], borderWidth: 2, fill: false, tension: 0 },
+              { label: 'Harvested Wood Products NT', data: hwp, borderColor: '#101010', borderDash: [2,5], borderWidth: 2, fill: false, tension: 0 },
+              { label: 'Litter & Mortality and Harvest Losses NT', data: litter, borderColor: '#101010', borderDash: [1,4], borderWidth: 1.5, fill: false, tension: 0 }
+            ]
           },
-          title: { display: false }
-        },
-        scales: {
-          x: {
-            title: { display: true, text: 'Year' },
-            ticks: { autoSkip: true, maxTicksLimit: 12 },
-            grid: {
-              color: (ctx) => {
-                // draw dashed green line on harvest years
-                const x = ctx.tick.value;
-                return harvestSet.has(x) ? '#0e6b3a44' : '#e6efe9';
+          options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { position: 'top' },
+              tooltip: {
+                callbacks: {
+                  footer: (items) => {
+                    const total = items.reduce((s, i) => s + i.parsed.y, 0);
+                    return `Total: ${total.toFixed(1)} tCO₂e/ha`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                title: { display: true, text: 'Year' },
+                ticks: { autoSkip: true, maxTicksLimit: 10 },
+                grid: {
+                  color: (ctx) => {
+                    const x = Number(ctx.tick.label);
+                    return harvestYears.includes(x) ? '#0e6b3a55' : '#e6efe9';
+                  },
+                  borderDash: (ctx) => {
+                    const x = Number(ctx.tick.label);
+                    return harvestYears.includes(x) ? [4,4] : [];
+                  }
+                }
               },
-              borderDash: (ctx) => {
-                const x = ctx.tick.value;
-                return harvestSet.has(x) ? [4,4] : [];
+              y: {
+                title: { display: true, text: 'tCO₂e per ha (stock)' },
+                beginAtZero: true,
+                suggestedMax: 720,
+                grid: { color: '#e6efe9' }
               }
+            },
+            elements: {
+              point: { radius: 0, hitRadius: 8 },
+              line:  { tension: 0 }
             }
-          },
-          y: {
-            title: { display: true, text: 'tCO₂e per ha (stock)' },
-            beginAtZero: true,
-            grid: { color: '#e6efe9' }
           }
-        },
-        elements: {
-          line: { tension: 0.3, borderWidth: 2 },
-          point: { radius: 0, hitRadius: 8 }
+        });
+    
+        // caption
+        const caption = document.getElementById('carbonCaption');
+        function updateCaption(i){
+          const yr = years[i];
+          const total = (ag[i]||0) + (bg[i]||0) + (hwp[i]||0) + (litter[i]||0);
+          let note = `Year ${yr} — AG: ${(ag[i]||0).toFixed(1)}, BG: ${(bg[i]||0).toFixed(1)}, HWP: ${(hwp[i]||0).toFixed(1)}, Litter: ${(litter[i]||0).toFixed(1)} tCO₂e/ha (Total ${total.toFixed(1)}).`;
+          if (harvestYears.includes(yr)) note += ' Harvest year: AG drops; part of removed carbon enters HWP; BG and litter adjust.';
+          caption.textContent = note;
         }
-      }
-    });
-  
-    // Caption updater
-    const caption = document.getElementById('carbonCaption');
-    function updateCaption(yearIdx){
-      const year = t[yearIdx];
-      const agv = ag[yearIdx], bgv = bg[yearIdx], h = hwp[yearIdx];
-      const total = agv + bgv + h;
-      let note = `Year ${year}: Above-ground ${agv.toFixed(1)}, Below-ground ${bgv.toFixed(1)}, HWP ${h.toFixed(1)} tCO₂e/ha (Total ${total.toFixed(1)}). `;
-      if (year>0 && year % rotation === 0){
-        note += `Harvest year: above-ground drops; part of removed carbon enters HWP (with decay), while below-ground decomposes slowly and contributes to the DOM pool.`;
-      } else if ((year % rotation) === rotation-1){
-        note += `End of rotation approaching—stocks near peak before harvest.`;
-      } else {
-        note += `Growing phase—above-ground drives most of the increase.`;
-      }
-      caption.textContent = note;
-    }
-  
-    // react to hover / focus
-    document.getElementById('carbonChart').addEventListener('mousemove', (evt)=>{
-      const points = chart.getElementsAtEventForMode(evt, 'index', {intersect:false}, false);
-      if(points.length){ updateCaption(points[0].index); }
-    });
-    document.getElementById('carbonChart').addEventListener('mouseleave', ()=>{
-      caption.textContent = 'Tip: move your cursor along the chart to see annual values and a short explanation.';
-    });
-  
-    // initialize caption at year 0
-    updateCaption(0);
-  })();
-  </script>
+        document.getElementById('carbonChart').addEventListener('mousemove', (evt)=>{
+          const pts = chart.getElementsAtEventForMode(evt, 'index', {intersect:false}, false);
+          if(pts.length) updateCaption(pts[0].index);
+        });
+        document.getElementById('carbonChart').addEventListener('mouseleave', ()=>{
+          caption.textContent = 'Tip: move your cursor along the chart to see annual values and a short explanation.';
+        });
+        updateCaption(0);
+      })();
+    </script>
+    
+    
   
 
  <section id="forest-biodiversity" class="fbx-section" aria-labelledby="fbx-title">
@@ -643,79 +629,65 @@
 </style>
 
 <script>
-/*
-  Simple, report-aligned scoring logic (illustrative):
-  - Species base: Oak 5, Birch 4, Spruce 2
-  - Soil adj.: Brown +1, Podzolic +0, Gley -1, Peat -2 (min/max clipped)
-  - Stage adj.: Open 0, Canopy -2, Mature +1
-  - Management: Thinned +1, Unthinned 0
-  Final score 1..5 → Very Low..Very High, with an explanation string.
-  Replace this with your Delphi scores matrix when ready.
-*/
-const el = (id)=>document.getElementById(id);
-const resultBox  = el("biodiversity-result");
-const badge      = el("score-badge");
-const titleEl    = el("result-title");
-const descEl     = el("result-desc");
-
-const speciesBase = { spruce:2, birch:4, oak:5 };
-const soilAdj     = { brown:1, podzolic:0, gley:-1, peat:-2 };
-const stageAdj    = { open:0, canopy:-2, mature:1 };
-const mgmtAdj     = { thinned:1, unthinned:0 };
-
-const labels = ["Very Low","Low","Moderate","High","Very High"];
-const badgeClass = ["badge-vl","badge-l","badge-m","badge-h","badge-vh"];
-
-function explain(species, soil, stage, mgmt, score){
-  const bits = [];
-  // species
-  if(species==="oak") bits.push("native oak supports rich understorey and structural diversity");
-  else if(species==="birch") bits.push("native birch promotes light and early-successional flora");
-  else bits.push("Sitka spruce has lower understory diversity overall");
-  // soil
-  if(soil==="peat") bits.push("peat soils limit species richness");
-  else if(soil==="brown") bits.push("brown earths favour higher biodiversity");
-  else if(soil==="gley") bits.push("gley soils constrain diversity in wetter conditions");
-  // stage
-  if(stage==="canopy") bits.push("canopy closure reduces light");
-  else if(stage==="mature") bits.push("mature structure increases niches");
-  // management
-  if(mgmt==="thinned") bits.push("thinning improves light and heterogeneity");
-  return bits.join("; ") + ".";
-}
-
-function update(){
-  const s  = el("species").value;
-  const so = el("soil").value;
-  const st = el("stage").value;
-  const m  = el("management").value;
-
-  let raw = (speciesBase[s] ?? 3) + (soilAdj[so] ?? 0) + (stageAdj[st] ?? 0) + (mgmtAdj[m] ?? 0);
-  raw = Math.max(1, Math.min(5, raw));
-  const idx = raw-1;
-
-  // badge
-  badge.textContent = labels[idx];
-  badge.className = "fbx-badge " + badgeClass[idx];
-
-  // title & description
-  const nice = {
-    spruce:"Sitka Spruce", birch:"Birch", oak:"Oak",
-    brown:"Brown Earth", podzolic:"Podzolic", gley:"Gley", peat:"Peat",
-    open:"Open", canopy:"Canopy Closure", mature:"Mature",
-    thinned:"Thinned", unthinned:"Unthinned"
-  };
-  titleEl.textContent = `${nice[s]} on ${nice[so]} • ${nice[st]} • ${nice[m]}`;
-  descEl.textContent  = explain(s,so,st,m,raw);
-}
-
-// bind
-document.querySelectorAll("#forest-biodiversity select").forEach(sel=>{
-  sel.addEventListener("change", update);
-});
-update(); // initial
-</script>
-
+  document.addEventListener("DOMContentLoaded", () => {
+    const el = (id)=>document.getElementById(id);
+    const resultBox  = el("biodiversity-result");
+    const badge      = el("score-badge");
+    const titleEl    = el("result-title");
+    const descEl     = el("result-desc");
+  
+    const speciesBase = { spruce:2, birch:4, oak:5 };
+    const soilAdj     = { brown:1, podzolic:0, gley:-1, peat:-2 };
+    const stageAdj    = { open:0, canopy:-2, mature:1 };
+    const mgmtAdj     = { thinned:1, unthinned:0 };
+  
+    const labels = ["Very Low","Low","Moderate","High","Very High"];
+    const badgeClass = ["badge-vl","badge-l","badge-m","badge-h","badge-vh"];
+  
+    function explain(species, soil, stage, mgmt){
+      const bits = [];
+      if(species==="oak") bits.push("native oak supports rich understorey and structural diversity");
+      else if(species==="birch") bits.push("native birch promotes light and early-successional flora");
+      else bits.push("Sitka spruce has lower understory diversity overall");
+      if(soil==="peat") bits.push("peat soils limit species richness");
+      else if(soil==="brown") bits.push("brown earths favour higher biodiversity");
+      else if(soil==="gley") bits.push("gley soils constrain diversity in wetter conditions");
+      if(stage==="canopy") bits.push("canopy closure reduces light");
+      else if(stage==="mature") bits.push("mature structure increases niches");
+      if(mgmt==="thinned") bits.push("thinning improves light and heterogeneity");
+      return bits.join("; ") + ".";
+    }
+  
+    function update(){
+      const s  = el("species").value;
+      const so = el("soil").value;
+      const st = el("stage").value;
+      const m  = el("management").value;
+  
+      let raw = (speciesBase[s] ?? 3) + (soilAdj[so] ?? 0) + (stageAdj[st] ?? 0) + (mgmtAdj[m] ?? 0);
+      raw = Math.max(1, Math.min(5, raw));
+      const idx = raw-1;
+  
+      badge.textContent = labels[idx];
+      badge.className = "fbx-badge " + badgeClass[idx];
+      const nice = {
+        spruce:"Sitka Spruce", birch:"Birch", oak:"Oak",
+        brown:"Brown Earth", podzolic:"Podzolic", gley:"Gley", peat:"Peat",
+        open:"Open", canopy:"Canopy Closure", mature:"Mature",
+        thinned:"Thinned", unthinned:"Unthinned"
+      };
+      titleEl.textContent = `${nice[s]} on ${nice[so]} • ${nice[st]} • ${nice[m]}`;
+      descEl.textContent  = explain(s,so,st,m);
+    }
+  
+    document.querySelectorAll("#forest-biodiversity select").forEach(sel=>{
+      sel.addEventListener("change", update);
+    });
+    update();
+  });
+  </script>
+  
+  
     
     <section id="ag-biodiversity">
         <h2>Agricultural → Forest: Biodiversity Change (First 0–8 Years)</h2>
@@ -753,8 +725,9 @@ update(); // initial
             <span>↑ gain</span>
           </div>
           <p class="footnote">
-            Values shown are illustrative sample scores from the expert quick-scoring sheet (Table 3). Replace with final survey medians when available.
+            Values shown are derived from AFFOR’s expert survey. Final medians will replace these values in the final model.
           </p>
+          
         </div>
       </section>
       
@@ -800,80 +773,105 @@ update(); // initial
       </style>
       
       <script>
-      // --- SAMPLE DATA (replace with final medians when ready) ---
-      // Structure: soil -> rows [{label, sitka, birch, oak}]
-      const data = {
-        brown: [
-          { label: "Dairy/Beef — Highly stocked (>1.7 LU/ha)", sitka: 15, birch: 20, oak: 25 }
-        ],
-        podzolic: [
-          { label: "Dairy/Beef — Intensive/moderate (1.4–1.7 LU/ha)", sitka: 9, birch: 10, oak: 8 }
-        ],
-        gley: [
-          { label: "Beef/Sheep — Moderate (0.92–1.4 LU/ha)", sitka: 0, birch: 0, oak: 0 }
-        ],
-        organic: [
-          { label: "Beef — Extensive/low (0.10–0.92 LU/ha)", sitka: 17, birch: 12, oak: 1 },
-          { label: "Sheep — Extensive/low (0.10–0.92 LU/ha)", sitka: 15, birch: 10, oak: 1 }
-        ]
-      };
-      
-      // heat color helper (negatives to red, positives to green, 0 neutral)
-      function colorFor(val){
-        // clamp -30..+30 for gradient
-        const v = Math.max(-30, Math.min(30, val || 0));
-        if (v === 0) return "#fffdf7";
-        // interpolate: red(>neg), amber(near 0), green(>pos)
-        if (v < 0) {
-          const t = Math.abs(v)/30;
-          return `rgba(247, 217, 217, ${0.35 + 0.45*t})`; // pale red
-        } else {
-          const t = v/30;
-          return `rgba(201, 235, 221, ${0.35 + 0.45*t})`; // pale green
-        }
-      }
-      
-      function badgeFor(val){
-        if (val > 0) return `<span class="badge">+${val}%</span>`;
-        if (val < 0) return `<span class="badge">${val}%</span>`;
-        return `<span class="badge" style="background:#fff6e5;color:#8a6b00;">0%</span>`;
-      }
-      
-      function renderSoil(soilKey){
-        const body = document.getElementById("heatmap-body");
-        body.innerHTML = "";
-        (data[soilKey] || []).forEach(row => {
-          const tr = document.createElement("tr");
-      
-          const th = document.createElement("th");
-          th.textContent = row.label;
-          tr.appendChild(th);
-      
-          ["sitka","birch","oak"].forEach(sp => {
-            const td = document.createElement("td");
-            const v = row[sp];
-            td.innerHTML = `<div class="cell" style="background:${colorFor(v)}">${badgeFor(v)}</div>`;
-            tr.appendChild(td);
-          });
-      
-          body.appendChild(tr);
-        });
-      }
-      
-      // init
-      renderSoil("brown");
-      
-      // tab handlers
-      document.querySelectorAll(".soil-tab").forEach(btn => {
-        btn.addEventListener("click", () => {
-          document.querySelectorAll(".soil-tab").forEach(b=>b.classList.remove("active"));
-          btn.classList.add("active");
-          document.querySelectorAll(".soil-tab").forEach(b=>b.setAttribute("aria-selected","false"));
-          btn.setAttribute("aria-selected","true");
-          renderSoil(btn.dataset.soil);
-        });
-      });
-      </script>
+/* ==== DATA (aynen seninki) ==== */
+const data = {
+  brown: [
+    { label:"Dairy/Beef — Highly stocked (>1.7 LU/ha)",
+      sitka:"7.14 – 14.68%", birch:"47.14 – 37.84%", oak:"68.57 – 56.99%" }
+  ],
+  podzolic: [
+    { label:"Dairy/Beef — Intensive/moderate (1.4–1.7 LU/ha)",
+      sitka:"4.86 – 13.17%", birch:"36.43 – 33.75%", oak:"56.86 – 59.28%" }
+  ],
+  gley: [
+    { label:"Beef/Sheep — Moderate (0.92–1.4 LU/ha)",
+      sitka:"−22.14 – 29.56%", birch:"−4.29 – 22.25%", oak:"5.71 – 24.23%" }
+  ],
+  organic: [
+    { label:"Beef — Extensive/low (0.10–0.92 LU/ha)",
+      sitka:"−46.71 – 27.88%", birch:"−16.71 – 25.04%", oak:"−2.29 – 21.56%" },
+    { label:"Sheep — Extensive/low (0.10–0.92 LU/ha)",
+      sitka:"−45.00 – 27.08%", birch:"−13.57 – 28.83%", oak:"−0.14 – 23.63%" }
+  ]
+};
+
+/* ==== Yardımcılar: aralık metnini sayıya çevir ==== */
+// "−22.14 – 29.56%" gibi değerleri {min, max, mid, text} yapar
+function toNumber(str){
+  return parseFloat(String(str)
+    .replace(/%/g,'')
+    .replace(/\s+/g,'')
+    .replace(/\u2212/g,'-') // unicode minus → -
+  );
+}
+function parseRange(val){
+  if (typeof val === 'number') return {min:val, max:val, mid:val, text:(val>=0?`+${val}`:val) + '%'};
+  const s = String(val).trim();
+  const parts = s.split(/[–—]/); // en/em dash
+  if (parts.length === 2){
+    const a = toNumber(parts[0]);
+    const b = toNumber(parts[1]);
+    return {min: Math.min(a,b), max: Math.max(a,b), mid:(a+b)/2, text:
+            `${a>=0?`+${a}`:a}% – ${b>=0?`+${b}`:b}%`};
+  }
+  const x = toNumber(s);
+  return {min:x, max:x, mid:x, text:(x>=0?`+${x}`:x)+'%'};
+}
+
+/* ==== Renk/rozet ==== */
+function colorForMid(mid){
+  // ±70’e göre ölçek (kırmızı → nötr → yeşil)
+  const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
+  const v = clamp(mid, -70, 70);
+  if (v === 0) return "#fffdf7";
+  if (v < 0){
+    const t = Math.abs(v)/70;
+    return `rgba(247, 217, 217, ${0.35 + 0.45*t})`;
+  } else {
+    const t = v/70;
+    return `rgba(201, 235, 221, ${0.35 + 0.45*t})`;
+  }
+}
+function badgeHTML(text){
+  // text zaten “+7.14% – 14.68%” formatında
+  return `<span class="badge">${text}</span>`;
+}
+
+/* ==== Tabloyu çiz ==== */
+function renderSoil(soilKey){
+  const body = document.getElementById("heatmap-body");
+  body.innerHTML = "";
+  (data[soilKey] || []).forEach(row => {
+    const tr = document.createElement("tr");
+
+    const th = document.createElement("th");
+    th.textContent = row.label;
+    tr.appendChild(th);
+
+    ["sitka","birch","oak"].forEach(sp => {
+      const td = document.createElement("td");
+      const r  = parseRange(row[sp]);        // {min,max,mid,text}
+      const bg = colorForMid(r.mid);
+      td.innerHTML = `<div class="cell" style="background:${bg}">${badgeHTML(r.text)}</div>`;
+      tr.appendChild(td);
+    });
+
+    body.appendChild(tr);
+  });
+}
+
+/* ==== Başlangıç ve sekmeler ==== */
+renderSoil("brown");
+document.querySelectorAll(".soil-tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".soil-tab").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".soil-tab").forEach(b=>b.setAttribute("aria-selected","false"));
+    btn.setAttribute("aria-selected","true");
+    renderSoil(btn.dataset.soil);
+  });
+});
+</script>
 
 <section id="project-outputs" class="outputs-section">
     <header class="outputs-head">
@@ -889,8 +887,8 @@ update(); // initial
         <div class="icon">💶</div>
         <h3>Economic Viability</h3>
         <p>
-          Forestry is privately profitable on ~1/3 of farms. When carbon is valued, 
-          social returns rise to ~47% at €32/tCO₂ and ~97% at €100/tCO₂.
+          Forestry is privately profitable on approximately one-third of Irish farms, based on timber revenues and afforestation subsidies. 
+          When the climate value of carbon is included, the share of farms with positive social returns rises from about 47% at €32 per tCO₂ to nearly 97% at €100 per tCO₂, highlighting the transformative impact of carbon pricing on afforestation decisions.
         </p>
       </div>
   
@@ -898,8 +896,9 @@ update(); // initial
         <div class="icon">🌍</div>
         <h3>Carbon & Climate</h3>
         <p>
-          Each hectare of unthinned Sitka spruce offsets ~3.97 livestock units. 
-          Afforestation delivers a “double carbon dividend”: sequestration plus avoided emissions.
+          Each hectare of unthinned Sitka spruce offsets an average of ~3.97 livestock units (LU), with a range of ~2.34–4.13 LU depending on soil type and conditions. 
+          Afforestation delivers a “double carbon dividend” by both sequestering carbon in live biomass, soils, and harvested wood products and avoiding agricultural emissions (CH₄ and N₂O) by displacing livestock production. 
+          This dual benefit significantly enhances forestry’s role in Ireland’s national climate mitigation strategy.
         </p>
       </div>
   
@@ -907,8 +906,9 @@ update(); // initial
         <div class="icon">🦋</div>
         <h3>Biodiversity</h3>
         <p>
-          Native broadleaves (Birch, Oak) generally enhance flora and fauna. 
-          Canopy closure reduces scores, while thinning improves diversity.
+          Native broadleaf species such as birch and oak generally support higher levels of biodiversity — including flora, invertebrates, and vertebrates — compared with Sitka spruce, particularly over the longer term. 
+          Biodiversity scores tend to be lowest at the canopy-closure stage, when structural complexity is limited, but increase significantly following thinning, which enhances light penetration, understorey growth, and habitat diversity. 
+          Soil type further moderates outcomes, with brown earths generally associated with higher biodiversity potential than peat soils.
         </p>
       </div>
   
@@ -916,8 +916,8 @@ update(); // initial
         <div class="icon">📑</div>
         <h3>Policy Relevance</h3>
         <p>
-          AFFOR integrates farm-level economics, carbon, and biodiversity. 
-          It informs Ireland’s Climate Action Plan and EU Green Deal commitments.
+          The AFFOR model integrates farm-level economic analysis, carbon accounting, and biodiversity assessment into a single evidence-based decision-support framework. It provides insights into where and under what conditions afforestation is most beneficial, guiding the design and targeting of policy incentives. 
+          AFFOR directly informs the implementation of Ireland’s Climate Action Plan, the EU Green Deal, and the EU Forest Strategy, supporting policies that maximise afforestation’s contributions to climate mitigation, biodiversity enhancement, and rural development
         </p>
       </div>
     </div>
